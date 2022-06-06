@@ -5,6 +5,8 @@ version: '3'
 env:
   GOROOT:
     sh: go env GOROOT
+  TINYGOROOT:
+    sh: tinygo env TINYGOROOT
 
 tasks:
   install:wasmtime:
@@ -17,22 +19,26 @@ tasks:
       - sudo dpkg -i tinygo_0.23.0_amd64.deb
       - rm tinygo_0.23.0_amd64.deb
 
-  bootstrap:
-    cmds:
-      - mkdir -p build
-      - cp frontend/* build/
-      - cp "$GOROOT/misc/wasm/wasm_exec.js" build/runner.js
-
   build:
     env:
       GOOS: js
       GOARCH: wasm
     cmds:
+      - rm -rf build
+      - mkdir -p build
+      - cp frontend/* build/
+      - cp "$GOROOT/misc/wasm/wasm_exec.js" build/runner.js
       - go build -o build/frontend.wasm {{.CLI_ARGS}}
+      - ls -lah ./build/frontend.wasm
 
   tiny_build:
     cmds:
-      - tinygo build -wasm-abi=generic -target=wasi -o build/frontend.wasm {{.CLI_ARGS}}
+      - rm -rf build
+      - mkdir -p build
+      - cp frontend/* build/
+      - cp "$TINYGOROOT/targets/wasm_exec.js" build/runner.js
+      - tinygo build -target=wasm -o build/frontend.wasm {{.CLI_ARGS}}
+      - ls -lah ./build/frontend.wasm
 
   serve:
     cmds:
