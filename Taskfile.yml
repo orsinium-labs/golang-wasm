@@ -1,0 +1,25 @@
+# https://taskfile.dev
+
+version: '3'
+
+env:
+  GOROOT:
+    sh: go env GOROOT
+
+tasks:
+  bootstrap:
+    cmds:
+      - mkdir -p build
+      - cp frontend/* build/
+      - cp "$GOROOT/misc/wasm/wasm_exec.js" build/runner.js
+
+  build:
+    env:
+      GOOS: js
+      GOARCH: wasm
+    cmds:
+      - go build -o build/frontend.wasm {{.CLI_ARGS}}
+
+  serve:
+    cmds:
+      - go run ./server
