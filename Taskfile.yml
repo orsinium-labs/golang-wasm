@@ -7,6 +7,16 @@ env:
     sh: go env GOROOT
 
 tasks:
+  install:wasmtime:
+    cmds:
+      - curl https://wasmtime.dev/install.sh -sSf | bash
+
+  install:tinygo:
+    cmds:
+      - wget https://github.com/tinygo-org/tinygo/releases/download/v0.23.0/tinygo_0.23.0_amd64.deb
+      - sudo dpkg -i tinygo_0.23.0_amd64.deb
+      - rm tinygo_0.23.0_amd64.deb
+
   bootstrap:
     cmds:
       - mkdir -p build
@@ -20,6 +30,21 @@ tasks:
     cmds:
       - go build -o build/frontend.wasm {{.CLI_ARGS}}
 
+  tiny_build:
+    cmds:
+      - tinygo build -wasm-abi=generic -target=wasi -o build/frontend.wasm {{.CLI_ARGS}}
+
   serve:
     cmds:
       - go run ./server
+
+  wasi:build:
+    cmds:
+      - tinygo build -wasm-abi=generic -target=wasi -o wasi.wasm ./wasi
+      - ls -lah wasi.wasm
+
+  wasi:run:
+    cmds:
+      - wasmtime --dir . wasi.wasm
+      - cat log.txt
+      - rm log.txt
