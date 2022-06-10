@@ -1,12 +1,15 @@
 # rocket.py
 
+from pathlib import Path
 import pygame
 import time
 from machine import float64, int32
 import machine
 import math
 import wadze    # Web Assembly Decoder
-module = wadze.parse_module(open('program.wasm', 'rb').read())
+
+path = Path(__file__).parent / 'program.wasm'
+module = wadze.parse_module(path.read_bytes())
 
 # Build imported functions
 

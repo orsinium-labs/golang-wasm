@@ -62,7 +62,7 @@ tasks:
 
   wasi:build:
     cmds:
-      - tinygo build -wasm-abi=generic -target=wasi -o wasi.wasm ./wasi
+      - tinygo build -target=wasi -o wasi.wasm ./wasi
       - ls -lah wasi.wasm
 
   wasi:run:
