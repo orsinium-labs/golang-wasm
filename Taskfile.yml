@@ -19,6 +19,17 @@ tasks:
       - sudo dpkg -i tinygo_0.23.0_amd64.deb
       - rm tinygo_0.23.0_amd64.deb
 
+  install:binaryen:
+    status:
+      - which wasm-opt
+    cmds:
+      - wget https://github.com/WebAssembly/binaryen/releases/download/version_108/binaryen-version_108-x86_64-linux.tar.gz
+      - tar -xf binaryen-version_108-x86_64-linux.tar.gz
+      - rm binaryen-version_108-x86_64-linux.tar.gz
+      - mv binaryen-version_108/bin/* ~/.local/bin
+      - rm -rf binaryen-version_108
+      - wasm-opt --version
+
   build:
     env:
       GOOS: js
@@ -38,6 +49,11 @@ tasks:
       - cp frontend/* build/
       - cp "$TINYGOROOT/targets/wasm_exec.js" build/runner.js
       - tinygo build -target=wasm -o build/frontend.wasm {{.CLI_ARGS}}
+      - ls -lah ./build/frontend.wasm
+
+  optimize:
+    cmds:
+      - wasm-opt -Oz -o build/frontend.wasm build/frontend.wasm
       - ls -lah ./build/frontend.wasm
 
   serve:
