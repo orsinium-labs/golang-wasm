@@ -107,6 +107,12 @@ height = float64(600.)
 
 m.call(exports['resize'], width, height)    # Prayer
 
+# Key map
+LEFT = {276, 97, 1073741904}
+RIGHT = {275, 100, 1073741903}
+BOOST = {273, 119, 1073741906}
+SHOOT = {32}
+
 # Game loop
 
 last = time.time()
@@ -115,23 +121,23 @@ while True:
         if event.type == pygame.QUIT:
             raise SystemExit()
         elif event.type == pygame.KEYUP:
-            if event.key == 32:
+            if event.key in SHOOT:
                 m.call(exports['toggle_shoot'], int32(0))
-            elif event.key == 275:
+            elif event.key in RIGHT:
                 m.call(exports['toggle_turn_right'], int32(0))
-            elif event.key == 276:
+            elif event.key in LEFT:
                 m.call(exports['toggle_turn_left'], int32(0))
-            elif event.key == 273:
+            elif event.key in BOOST:
                 m.call(exports['toggle_boost'], int32(0))
 
         elif event.type == pygame.KEYDOWN:
-            if event.key == 32:
+            if event.key in SHOOT:
                 m.call(exports['toggle_shoot'], int32(1))
-            elif event.key == 275:
+            elif event.key in RIGHT:
                 m.call(exports['toggle_turn_right'], int32(1))
-            elif event.key == 276:
+            elif event.key in LEFT:
                 m.call(exports['toggle_turn_left'], int32(1))
-            elif event.key == 273:
+            elif event.key in BOOST:
                 m.call(exports['toggle_boost'], int32(1))
 
     now = time.time()
