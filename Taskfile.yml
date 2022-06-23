@@ -1,12 +1,12 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 env:
   GOROOT:
     sh: go env GOROOT
   TINYGOROOT:
-    sh: tinygo env TINYGOROOT
+    sh: tinygo env TINYGOROOT || true
 
 tasks:
   install:wasmtime:
